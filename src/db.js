@@ -1,6 +1,15 @@
 const Sequelize = require('sequelize');
 
 const userModule = require('./models/user.js');
+const pedidoModule = require('./models/pedido.js');
+const clienteModule = require('./models/cliente.js');
+const concretoModule = require('./models/concreto.js');
+const conductorModule = require('./models/conductor.js');
+const vendedorModule = require('./models/vendedor.js');
+const cierreModule = require('./models/cierre.js');
+const creditoModule = require('./models/credito.js');
+const pagoModule = require('./models/pago.js');
+const bancoModule = require('./models/banco.js');
 
 const sequelize = new Sequelize('triturados', 'root', '',{
     host:'localhost',
@@ -8,9 +17,18 @@ const sequelize = new Sequelize('triturados', 'root', '',{
 });
 
 const User = userModule(sequelize, Sequelize);
+const Pedido = pedidoModule(sequelize, Sequelize);
+const Cliente = clienteModule(sequelize, Sequelize);
+const Concreto = concretoModule(sequelize, Sequelize);
+const Conductor = conductorModule(sequelize, Sequelize);
+const Vendedor = vendedorModule(sequelize, Sequelize);
+const Cierre = cierreModule(sequelize, Sequelize);
+const Credito = creditoModule(sequelize, Sequelize);
+const Pago = pagoModule(sequelize, Sequelize);
+const Banco = bancoModule(sequelize, Sequelize);
 
 sequelize.sync({force:false}).then(()=>{
     console.log("Conexión sql exitosa");
 });
 
-module.exports = {User};
+module.exports = {User, Pedido, Cliente, Concreto, Conductor, Vendedor, Cierre, Credito, Pago, Banco};

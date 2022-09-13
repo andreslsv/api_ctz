@@ -7,6 +7,7 @@ const { listen } = require('express/lib/application');
 const app = express();
 
 require('./db');
+require('./asociations');
 
 //Settings
 app.set('port', process.env.PORT || 3000);//Si no tiene puerto habilitado, usará el 3000 por defecto
