@@ -1,4 +1,4 @@
-const express = require('express'), morgan = require('morgan'),config = require('./configs/config');;
+const express = require('express'), morgan = require('morgan'),config = require('./configs/config'),cors =require('cors');
 
 var bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -19,6 +19,7 @@ app.use(express.urlencoded({extended:false}));//Solo recibe data sencilla(No im√
 app.use(express.json());
 app.use(bodyParser.json());
 app.set('llave', config.llave);
+app.use(cors());
 
 //Middlewar jwt
 const rutasProtegidas = express.Router(); 

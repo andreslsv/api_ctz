@@ -5,11 +5,11 @@ const { User } = require('../db');
 
 router.post('/login', async (req,res)=>{
 
-    const users = await User.findAll({
+    const user = await User.findAll({
         where:req.body
     });
 
-    if(users.length == 0){
+    if(user.length == 0){
         res.json({
             error:`Credenciales incorrectas`
         });
@@ -19,8 +19,9 @@ router.post('/login', async (req,res)=>{
             });
 
             res.json({
-                error: 'No autorizado',
-                token: token
+                mensaje: 'Bienvenido',
+                token: token,
+                user:user
                });
         }
 
