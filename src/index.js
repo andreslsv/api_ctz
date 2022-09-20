@@ -50,6 +50,12 @@ app.use(require('./routes/login.js',login));
 var user = require('./routes/user.js');
 app.use('/api/',rutasProtegidas,require('./routes/user.js',user));
 
+var concreto = require('./routes/concreto.js');
+app.use('/api/',rutasProtegidas,require('./routes/concreto.js',concreto));
+
+var pedido = require('./routes/pedido.js');
+app.use('/api/',rutasProtegidas,require('./routes/pedido.js',pedido));
+
 
 //Arrancando el servidor en el puerto 3000
 app.listen(app.get('port'),()=>{

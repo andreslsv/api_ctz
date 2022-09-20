@@ -7,6 +7,7 @@ module.exports = (sequelize, type)=>{
         },
         name:type.STRING,
         nick:type.STRING,
+        role:type.STRING,
         email:type.STRING,
         avatar:type.STRING,
         status:type.STRING,

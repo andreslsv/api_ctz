@@ -15,7 +15,10 @@ router.post('/login', async (req,res,next)=>{
                 error:`Credenciales incorrectas`
             });
         }else{
-            const token = jwt.sign({check:  true}, req.app.get('llave'));//{expiresIn: 140}
+            const token = jwt.sign({check:  true}, req.app.get('llave'), {
+                expiresIn: '30d'
+            });
+    
             res.json({
                 mensaje: 'Bienvenido',
                 token: token,

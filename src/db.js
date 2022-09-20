@@ -10,6 +10,7 @@ const cierreModule = require('./models/cierre.js');
 const creditoModule = require('./models/credito.js');
 const pagoModule = require('./models/pago.js');
 const bancoModule = require('./models/banco.js');
+const perfilModule = require('./models/perfil.js');
 
 const sequelize = new Sequelize('triturados', 'root', '',{
     host:'localhost',
@@ -26,9 +27,10 @@ const Cierre = cierreModule(sequelize, Sequelize);
 const Credito = creditoModule(sequelize, Sequelize);
 const Pago = pagoModule(sequelize, Sequelize);
 const Banco = bancoModule(sequelize, Sequelize);
+const Perfil = perfilModule(sequelize, Sequelize);
 
 sequelize.sync({force:false}).then(()=>{
     console.log("Conexión sql exitosa");
 });
 
-module.exports = {User, Pedido, Cliente, Concreto, Conductor, Vendedor, Cierre, Credito, Pago, Banco};
+module.exports = {User, Pedido, Cliente, Concreto, Conductor, Vendedor, Cierre, Credito, Pago, Banco, Perfil};
