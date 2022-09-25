@@ -6,6 +6,7 @@ module.exports = (sequelize, type)=>{
             autoIncrement:true,
         },
         nombre:type.STRING,
-        unidad_medida:type.STRING
+        unidad_medida:type.STRING,
+        precio:type.STRING
     })
 }

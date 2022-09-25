@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Perfil } = require('../db');
+const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
 const { Op } = require("sequelize");
 
 router.get('/user', async (req,res)=>{
@@ -38,6 +38,43 @@ router.post('/user', async (req,res)=>{
 
     const userCreated = await User.create(usuario);
 
+    if(req.body.role=="vendedor"){
+        const vendedor = {
+            "nombre":`${req.body.nombres} ${req.body.apellidos}`,
+            "telefono":req.body.telefono,
+            "documento":req.body.documento,
+            "userId":userCreated.id
+        }
+        const vendedorCreated = await Vendedor.create(vendedor);
+    }
+
+    if(req.body.role=="conductor"){
+        const conductor = {
+            "nombre":`${req.body.nombres} ${req.body.apellidos}`,
+            "telefono":req.body.telefono,
+            "documento":req.body.documento,
+            "email":req.body.email,
+            "placa":req.body.placa,
+            "fecha_registro":req.body.fecha_registro,
+            "userId":userCreated.id
+        }
+        const conductorCreated = await Conductor.create(conductor);
+    }
+
+    if(req.body.role=="cliente"){
+        const cliente = {
+            "nombre":`${req.body.nombres} ${req.body.apellidos}`,
+            "telefono":req.body.telefono,
+            "documento":req.body.documento,
+            "email":req.body.email,
+            "placa":req.body.placa,
+            "fecha":req.body.fecha,
+            "userId":userCreated.id
+        }
+        const clienteCreated = await Cliente.create(cliente);
+    }
+
+    /*
     const perfil = {
         "userId": userCreated.id,
         "nombre":`${req.body.nombres} ${req.body.apellidos}`,
@@ -53,6 +90,7 @@ router.post('/user', async (req,res)=>{
     };
 
     const perfilCreated = await Perfil.create(perfil);
+    */
 
     res.json(userCreated);
 });
@@ -64,6 +102,15 @@ router.delete('/user/:id', async (req,res)=>{
         }
     });
     res.json(userDeleted);
+});
+
+router.get('/user/:id', async (req,res)=>{
+    const user = await User.findAll({
+        where: {
+            id:req.params.id
+        }
+    });
+    res.json(user);
 });
 
 

@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Concreto } = require('../db');
+const { Cliente } = require('../db');
 
-router.get('/concreto', async (req,res)=>{
-    
+router.get('/cliente', async (req,res)=>{
     var mainStatement = {};
     var whereStatement = {};
+    
     mainStatement.where = whereStatement;
 
     if(req.query.limit){
@@ -21,23 +21,27 @@ router.get('/concreto', async (req,res)=>{
         whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
     }
 
-    const concreto = await Concreto.findAll(mainStatement);
+    if(req.query.search_telefono){
+        whereStatement.telefono_contacto = {[Op.like]: '%' + req.query.search_telefono + '%'};
+    }
 
-    res.json(concreto); 
+    const cliente = await Cliente.findAll(mainStatement);
+
+    res.json(cliente);
 });
 
-router.post('/concreto', async (req,res)=>{
-    const concretoCreated = await Concreto.create(req.body);
-    res.json(concretoCreated);
+router.post('/cliente', async (req,res)=>{
+    const clienteCreated = await Cliente.create(req.body);
+    res.json(clienteCreated);
 });
 
-router.delete('/concreto/:id', async (req,res)=>{
-    const concretoDeleted = await Concreto.destroy({
+router.delete('/cliente/:id', async (req,res)=>{
+    const clienteDeleted = await Cliente.destroy({
         where: {
             id:req.params.id
         }
     });
-    res.json(concretoDeleted);
+    res.json(clienteDeleted);
 });
 
 module.exports=router;

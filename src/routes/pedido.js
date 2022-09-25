@@ -1,27 +1,51 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Pedido } = require('../db');
+const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente } = require('../db');
+const moment = require('moment');
 
 router.get('/pedido', async (req,res)=>{
 
+    var mainStatement = {};
     var whereStatement = {};
+    mainStatement.where = whereStatement;
 
-    if(req.query.search_nombre){
-        whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
+    if(req.query.limit){
+        mainStatement.limit = parseInt(req.query.limit);
     }
 
-    const pedido = await Pedido.findAll({
-        where:whereStatement,
-        limit:parseInt(req.query.limit),
-        offset:parseInt(req.query.offset),
-    });
+    if(req.query.offset){
+        mainStatement.offset = parseInt(req.query.offset);
+    }
+
+    if(req.query.order){
+        mainStatement.order = [['id', 'DESC']];
+    }
+
+    if(req.query.search_nombre){
+        whereStatement.fecha_despacho = {[Op.between]: [req.query.fechaInicio, req.query.fechaFin]};
+    }
+    
+    const pedido = await Pedido.findAll(mainStatement);
 
     res.json(pedido); 
 });
 
 router.post('/pedido', async (req,res)=>{
     const pedidoCreated = await Pedido.create(req.body);
+
+    const credito = {
+        "pedidoId":pedidoCreated.id,
+        "valor":0,
+        "abonos":0,
+        "ultimo_pago":"",
+        "fecha_pago":"",
+        "estado":"",
+    }
+
+    const creditoCreated = await Credito.create(credito);
+
+
     res.json(pedidoCreated);
 });
 

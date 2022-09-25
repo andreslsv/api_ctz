@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Concreto } = require('../db');
+const { Vendedor } = require('../db');
 
-router.get('/concreto', async (req,res)=>{
-    
+router.get('/vendedor', async (req,res)=>{
+
     var mainStatement = {};
     var whereStatement = {};
     mainStatement.where = whereStatement;
@@ -21,23 +21,27 @@ router.get('/concreto', async (req,res)=>{
         whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
     }
 
-    const concreto = await Concreto.findAll(mainStatement);
+    if(req.query.search_telefono){
+        whereStatement.telefono = {[Op.like]: '%' + req.query.search_telefono + '%'};
+    }
 
-    res.json(concreto); 
+    const vendedor = await Vendedor.findAll(mainStatement);
+
+    res.json(vendedor); 
 });
 
-router.post('/concreto', async (req,res)=>{
-    const concretoCreated = await Concreto.create(req.body);
-    res.json(concretoCreated);
+router.post('/vendedor', async (req,res)=>{
+    const vendedorCreated = await Vendedor.create(req.body);
+    res.json(vendedorCreated);
 });
 
-router.delete('/concreto/:id', async (req,res)=>{
-    const concretoDeleted = await Concreto.destroy({
+router.delete('/vendedor/:id', async (req,res)=>{
+    const vendedorDeleted = await Vendedor.destroy({
         where: {
             id:req.params.id
         }
     });
-    res.json(concretoDeleted);
+    res.json(vendedorDeleted);
 });
 
 module.exports=router;

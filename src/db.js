@@ -12,6 +12,8 @@ const pagoModule = require('./models/pago.js');
 const bancoModule = require('./models/banco.js');
 const perfilModule = require('./models/perfil.js');
 
+//'comunicaciones_triturados', 'comunicaciones_andres', 'mBxw^Dj)jr*O'
+
 const sequelize = new Sequelize('triturados', 'root', '',{
     host:'localhost',
     dialect:'mysql'

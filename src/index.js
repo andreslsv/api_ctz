@@ -19,7 +19,9 @@ app.use(express.urlencoded({extended:false}));//Solo recibe data sencilla(No im√
 app.use(express.json());
 app.use(bodyParser.json());
 app.set('llave', config.llave);
+
 app.use(cors());
+
 
 //Middlewar jwt
 const rutasProtegidas = express.Router(); 
@@ -55,6 +57,15 @@ app.use('/api/',rutasProtegidas,require('./routes/concreto.js',concreto));
 
 var pedido = require('./routes/pedido.js');
 app.use('/api/',rutasProtegidas,require('./routes/pedido.js',pedido));
+
+var cliente = require('./routes/cliente.js');
+app.use('/api/',rutasProtegidas,require('./routes/cliente.js',cliente));
+
+var conductor = require('./routes/conductor.js');
+app.use('/api/',rutasProtegidas,require('./routes/conductor.js',conductor));
+
+var vendedor = require('./routes/vendedor.js');
+app.use('/api/',rutasProtegidas,require('./routes/vendedor.js',vendedor));
 
 
 //Arrancando el servidor en el puerto 3000
