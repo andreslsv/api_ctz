@@ -36,10 +36,10 @@ router.post('/pedido', async (req,res)=>{
 
     const credito = {
         "pedidoId":pedidoCreated.id,
-        "valor":0,
+        "valor":req.body.valor,
         "abonos":0,
         "ultimo_pago":"",
-        "fecha_pago":"",
+        "fecha_pago":req.body.fecha_pago,
         "estado":"",
     }
 

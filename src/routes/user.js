@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
 const { Op } = require("sequelize");
+const multer = require('multer');
 
 router.get('/user', async (req,res)=>{
     var whereStatement = {};
@@ -94,6 +95,18 @@ router.post('/user', async (req,res)=>{
 
     res.json(userCreated);
 });
+
+setAvatarUsuario = () =>{
+    const storage = multer.diskStorage({
+        destination:(req,file,cb)=>{
+            cb(null, '../assets/images/avatars')
+        },
+        filename:(req,file,cb)=>{
+            const ext = file.originalname.split('.').pop();
+            cb(null,'archivo',ext)
+        }
+    });
+}
 
 router.delete('/user/:id', async (req,res)=>{
     const userDeleted = await User.destroy({

@@ -1,4 +1,4 @@
-const express = require('express'), morgan = require('morgan'),config = require('./configs/config'),cors =require('cors');
+const express = require('express'), morgan = require('morgan'),config = require('./configs/config'),cors = require('cors');
 
 var bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -15,7 +15,7 @@ app.set('json spaces', 2);
 
 //Middlewares
 app.use(morgan('dev'));
-app.use(express.urlencoded({extended:false}));//Solo recibe data sencilla(No imágenes)
+app.use(express.urlencoded({extended:true}));//Solo recibe data sencilla(No imágenes)
 app.use(express.json());
 app.use(bodyParser.json());
 app.set('llave', config.llave);
@@ -66,6 +66,12 @@ app.use('/api/',rutasProtegidas,require('./routes/conductor.js',conductor));
 
 var vendedor = require('./routes/vendedor.js');
 app.use('/api/',rutasProtegidas,require('./routes/vendedor.js',vendedor));
+
+var pago = require('./routes/pago.js');
+app.use('/api/',rutasProtegidas,require('./routes/pago.js',pago));
+
+var credito = require('./routes/credito.js');
+app.use('/api/',rutasProtegidas,require('./routes/credito.js',credito));
 
 
 //Arrancando el servidor en el puerto 3000
