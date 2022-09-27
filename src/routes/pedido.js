@@ -44,8 +44,6 @@ router.post('/pedido', async (req,res)=>{
     }
 
     const creditoCreated = await Credito.create(credito);
-
-
     res.json(pedidoCreated);
 });
 

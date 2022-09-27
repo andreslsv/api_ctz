@@ -3,6 +3,18 @@ const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
 const { Op } = require("sequelize");
 const multer = require('multer');
 
+
+genRandonString = (length)=>{
+    var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var charLength = chars.length;
+    var result = '';
+    for ( var i = 0; i < length; i++ ) {
+       result += chars.charAt(Math.floor(Math.random() * charLength));
+    }
+    return result;
+ }
+
+
 router.get('/user', async (req,res)=>{
     var whereStatement = {};
 
@@ -96,17 +108,24 @@ router.post('/user', async (req,res)=>{
     res.json(userCreated);
 });
 
-setAvatarUsuario = () =>{
+saveAvatarUser = () =>{
     const storage = multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null, '../assets/images/avatars')
+            cb(null, '../CTZ/src/assets/images/avatars')
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();
-            cb(null,'archivo',ext)
+            cb(null,`${req.usuarioId}_${genRandonString(20)}.${ext}`)
         }
     });
+
+    return multer({storage});
 }
+
+
+router.post('/avatar-usuario', saveAvatarUser().single('imgAvatar'), async (req,res)=>{
+    res.json({mensaje:"Imagen subida"});
+});
 
 router.delete('/user/:id', async (req,res)=>{
     const userDeleted = await User.destroy({
