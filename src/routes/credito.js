@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Credito, Pedido } = require('../db');
+const { Credito, Pedido, Pago } = require('../db');
 
 router.get('/credito', async (req,res)=>{
 
@@ -9,7 +9,7 @@ router.get('/credito', async (req,res)=>{
     var whereStatement = {};
     mainStatement.where = whereStatement;
 
-    const include = [Pedido];
+    const include = [Pedido, Pago];
     mainStatement.include = include;
 
 
@@ -27,6 +27,10 @@ router.get('/credito', async (req,res)=>{
 
     if(req.query.search_nombre){
         whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
+    }
+
+    if(req.query.id){
+        whereStatement.id = req.query.id;
     }
 
     const credito = await Credito.findAll(mainStatement);

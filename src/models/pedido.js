@@ -20,5 +20,6 @@ module.exports = (sequelize, type)=>{
         nombre_vendedor:type.STRING,
         nombre_conductor:type.STRING,
         estado:type.STRING,
+        aprobado:type.INTEGER//1 No Aprobado 2 aprobado
     })
 }

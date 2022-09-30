@@ -73,6 +73,9 @@ app.use('/api/',rutasProtegidas,require('./routes/pago.js',pago));
 var credito = require('./routes/credito.js');
 app.use('/api/',rutasProtegidas,require('./routes/credito.js',credito));
 
+var cierre = require('./routes/cierre.js');
+app.use('/api/',rutasProtegidas,require('./routes/cierre.js',cierre));
+
 
 //Arrancando el servidor en el puerto 3000
 app.listen(app.get('port'),()=>{

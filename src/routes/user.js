@@ -28,13 +28,36 @@ router.get('/user', async (req,res)=>{
         whereStatement.role = req.query.role;
     }
 
-    const user = await User.findAll({
+    //whereStatement.fields = ['id','name','email','avatar','status'];
+
+    //{ fields: ['id','name','email','avatar','status'] }
+
+    const user = await User.findAll(
+        {
         where:whereStatement,
         limit:parseInt(req.query.limit),
-        offset:parseInt(req.query.offset),
+        offset:parseInt(req.query.offset)
     });
 
     res.json(user);
+});
+
+router.post('/authuser', async (req,res)=>{
+    JWT.verify(req.body.token, 'miclaveultrasecreta123*', function(err, decodedToken) {
+        if(err) { /* handle token err */ }
+        else {
+         //req.userId = decodedToken.id;
+         //next();
+         const user={
+            id:decodedToken.id,
+            name:decodedToken.name,
+            avatar:decodedToken.avatar,
+            email:decodedToken.email,
+            status:decodedToken.status
+         }
+         res.json(user);
+        }
+      });
 });
 
 router.post('/user', async (req,res)=>{
@@ -115,13 +138,12 @@ saveAvatarUser = () =>{
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();
-            cb(null,`${req.usuarioId}_${genRandonString(20)}.${ext}`)
+            cb(null,`_${genRandonString(20)}.${ext}`)
         }
     });
 
     return multer({storage});
 }
-
 
 router.post('/avatar-usuario', saveAvatarUser().single('imgAvatar'), async (req,res)=>{
     res.json({mensaje:"Imagen subida"});

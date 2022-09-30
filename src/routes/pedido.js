@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente } = require('../db');
+const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente, Cierre } = require('../db');
 const moment = require('moment');
 
 router.get('/pedido', async (req,res)=>{
@@ -25,6 +25,10 @@ router.get('/pedido', async (req,res)=>{
     if(req.query.search_nombre){
         whereStatement.fecha_despacho = {[Op.between]: [req.query.fechaInicio, req.query.fechaFin]};
     }
+
+    if(req.query.aprobado){
+        whereStatement.aprobado = req.query.aprobado;
+    }
     
     const pedido = await Pedido.findAll(mainStatement);
 
@@ -32,6 +36,38 @@ router.get('/pedido', async (req,res)=>{
 });
 
 router.post('/pedido', async (req,res)=>{
+
+    const fecha_despacho = moment(req.body.fecha_despacho,'YYYY-MM-DD').format('DD-MM-YYYY');
+    const hora_inicio = moment(req.body.hora_cargue,"HH:mm").format("HH:mm");
+
+    const fecha_completa = `${fecha_despacho}${hora_inicio}`
+
+    const cierre_vigente = await Cierre.findAll({
+        where:{
+            [Op.and]: [
+                {fecha:{
+                    [Op.eq]:req.body.fecha_despacho
+                    }},
+                {
+                    hora_inicio:{
+                        [Op.lte]:hora_inicio
+                    }
+                },
+                {
+                    hora_fin:{
+                        [Op.gte]:hora_inicio
+                    }
+                },
+            ]
+        }
+    });
+
+    console.log("Esta es la fecha completa");
+
+    if (cierre_vigente.length>0){
+        res.status(500).send({ error: 'Dia y hora bloqueados' })
+    }
+
     const pedidoCreated = await Pedido.create(req.body);
 
     const credito = {
@@ -45,6 +81,19 @@ router.post('/pedido', async (req,res)=>{
 
     const creditoCreated = await Credito.create(credito);
     res.json(pedidoCreated);
+});
+
+
+router.post('/pedido/:id', async (req,res)=>{
+    const pedidoActualizado = await Pedido.update(
+        req.body,
+        {
+          where: {
+            id:req.params.id
+            },
+        }
+      );
+    res.json(pedidoActualizado);
 });
 
 router.delete('/pedido/:id', async (req,res)=>{
