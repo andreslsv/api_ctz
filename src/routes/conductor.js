@@ -29,7 +29,7 @@ router.get('/conductor', async (req,res)=>{
         whereStatement.email = {[Op.like]: '%' + req.query.search_correo + '%'};
     }
 
-    const conductor = await Conductor.findAll(mainStatement);
+    const conductor = await Conductor.findAndCountAll(mainStatement);
 
     res.json(conductor); 
 });

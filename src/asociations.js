@@ -1,4 +1,4 @@
-const {User, Concreto, Pedido, Conductor, Vendedor, Cliente, Credito, Cierre, Pago, Banco, Perfil} = require('./db');
+const {User, Concreto, Pedido, Conductor, Vendedor, Cliente, Credito, Cierre, Pago, Banco, Perfil, Despacho} = require('./db');
 
 /*
 Relaciones uno a uno
@@ -17,6 +17,9 @@ Vendedor.belongsTo(User);
 
 Pedido.hasOne(Credito);
 Credito.belongsTo(Pedido);
+
+Pedido.hasOne(Despacho);
+Despacho.belongsTo(Pedido);
 
 /*
 Relaciones uno a muchos

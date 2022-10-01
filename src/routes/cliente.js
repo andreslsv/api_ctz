@@ -25,7 +25,7 @@ router.get('/cliente', async (req,res)=>{
         whereStatement.telefono_contacto = {[Op.like]: '%' + req.query.search_telefono + '%'};
     }
 
-    const cliente = await Cliente.findAll(mainStatement);
+    const cliente = await Cliente.findAndCountAll(mainStatement);
 
     res.json(cliente);
 });

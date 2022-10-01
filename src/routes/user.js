@@ -32,7 +32,7 @@ router.get('/user', async (req,res)=>{
 
     //{ fields: ['id','name','email','avatar','status'] }
 
-    const user = await User.findAll(
+    const user = await User.findAndCountAll(
         {
         where:whereStatement,
         limit:parseInt(req.query.limit),

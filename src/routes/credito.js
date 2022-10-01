@@ -33,7 +33,7 @@ router.get('/credito', async (req,res)=>{
         whereStatement.id = req.query.id;
     }
 
-    const credito = await Credito.findAll(mainStatement);
+    const credito = await Credito.findAndCountAll(mainStatement);
 
     res.json(credito); 
 });

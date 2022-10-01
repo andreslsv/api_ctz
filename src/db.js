@@ -11,6 +11,7 @@ const creditoModule = require('./models/credito.js');
 const pagoModule = require('./models/pago.js');
 const bancoModule = require('./models/banco.js');
 const perfilModule = require('./models/perfil.js');
+const despachoModule = require('./models/despacho.js');
 
 //'comunicaciones_triturados', 'comunicaciones_andres', 'mBxw^Dj)jr*O'
 
@@ -30,9 +31,10 @@ const Credito = creditoModule(sequelize, Sequelize);
 const Pago = pagoModule(sequelize, Sequelize);
 const Banco = bancoModule(sequelize, Sequelize);
 const Perfil = perfilModule(sequelize, Sequelize);
+const Despacho = despachoModule(sequelize, Sequelize);
 
 sequelize.sync({force:false}).then(()=>{
     console.log("Conexión sql exitosa");
 });
 
-module.exports = {User, Pedido, Cliente, Concreto, Conductor, Vendedor, Cierre, Credito, Pago, Banco, Perfil};
+module.exports = {User, Pedido, Cliente, Concreto, Conductor, Vendedor, Cierre, Credito, Pago, Banco, Perfil, Despacho};

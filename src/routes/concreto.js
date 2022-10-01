@@ -21,7 +21,7 @@ router.get('/concreto', async (req,res)=>{
         whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
     }
 
-    const concreto = await Concreto.findAll(mainStatement);
+    const concreto = await Concreto.findAndCountAll(mainStatement);
 
     res.json(concreto); 
 });

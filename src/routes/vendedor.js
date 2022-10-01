@@ -25,7 +25,7 @@ router.get('/vendedor', async (req,res)=>{
         whereStatement.telefono = {[Op.like]: '%' + req.query.search_telefono + '%'};
     }
 
-    const vendedor = await Vendedor.findAll(mainStatement);
+    const vendedor = await Vendedor.findAndCountAll(mainStatement);
 
     res.json(vendedor); 
 });
