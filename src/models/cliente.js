@@ -5,10 +5,12 @@ module.exports = (sequelize, type)=>{
             primaryKey:true,
             autoIncrement:true,
         },
-        user_id:type.INTEGER,
+        color:type.STRING,//Diferencial
         nombre:type.STRING,
-        tipo_documento:type.INTEGER,
+        tipo_documento:type.STRING,
+        documento:type.STRING,
+        fecha:type.STRING,
         direccion:type.STRING,
-        telefono_contacto:type.STRING
+        telefono:type.STRING,
     })
 }

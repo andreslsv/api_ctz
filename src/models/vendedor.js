@@ -6,7 +6,11 @@ module.exports = (sequelize, type)=>{
             autoIncrement:true,
         },
         nombre:type.STRING,
-        telefono:type.STRING,
+        tipo_documento:type.STRING,
         documento:type.STRING,
+        fecha:type.STRING,
+        direccion:type.STRING,
+        telefono:type.STRING,
+        color:type.STRING
     })
 }

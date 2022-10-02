@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const multer = require('multer');
 
 
@@ -68,65 +68,34 @@ router.post('/user', async (req,res)=>{
         "role":req.body.role,
         "email":req.body.email,
         "password":req.body.password_1,
-        "avatar":"---",
         "status":2,
     };
 
     const userCreated = await User.create(usuario);
 
-    if(req.body.role=="vendedor"){
-        const vendedor = {
-            "nombre":`${req.body.nombres} ${req.body.apellidos}`,
-            "telefono":req.body.telefono,
-            "documento":req.body.documento,
-            "userId":userCreated.id
-        }
-        const vendedorCreated = await Vendedor.create(vendedor);
-    }
-
-    if(req.body.role=="conductor"){
-        const conductor = {
-            "nombre":`${req.body.nombres} ${req.body.apellidos}`,
-            "telefono":req.body.telefono,
-            "documento":req.body.documento,
-            "email":req.body.email,
-            "placa":req.body.placa,
-            "fecha_registro":req.body.fecha_registro,
-            "userId":userCreated.id
-        }
-        const conductorCreated = await Conductor.create(conductor);
-    }
-
-    if(req.body.role=="cliente"){
-        const cliente = {
-            "nombre":`${req.body.nombres} ${req.body.apellidos}`,
-            "telefono":req.body.telefono,
-            "documento":req.body.documento,
-            "email":req.body.email,
-            "placa":req.body.placa,
-            "fecha":req.body.fecha,
-            "userId":userCreated.id
-        }
-        const clienteCreated = await Cliente.create(cliente);
-    }
-
-    /*
-    const perfil = {
-        "userId": userCreated.id,
+    var estructura = {
+        "userId":userCreated.id,
         "nombre":`${req.body.nombres} ${req.body.apellidos}`,
         "tipo_documento":req.body.tipo_documento,
         "documento":req.body.documento,
+        "fecha":req.body.documento,
         "direccion":req.body.direccion,
-        "telefono":"---",
-        "email":2,
-        "placa":req.body.placa,
-        "fecha_registro":req.body.fecha_registro,
-        "fecha":req.body.fecha,
-        "estado":"---"
-    };
+        "telefono":req.body.telefono,
+    }
 
-    const perfilCreated = await Perfil.create(perfil);
-    */
+    if(req.body.role=="vendedor"){
+        const vendedorCreated = await Vendedor.create(estructura);
+    }
+
+    if(req.body.role=="conductor"){
+        estructura.placa = req.body.placa;
+        const conductorCreated = await Conductor.create(estructura);
+    }
+
+    if(req.body.role=="cliente"){
+        estructura.color = req.body.color;
+        const clienteCreated = await Cliente.create(estructura);
+    }
 
     res.json(userCreated);
 });
@@ -138,15 +107,36 @@ saveAvatarUser = () =>{
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();
-            cb(null,`_${genRandonString(20)}.${ext}`)
+            var archivo=`${req.body.userId}_${genRandonString(20)}.${ext}`;
+            editarCampoAvatar(req.body.userId,archivo);
+            cb(null,archivo)
         }
     });
 
     return multer({storage});
 }
 
+editarCampoAvatar=async(userId,nombreAvatar)=>{
+    const usuarioActualizado = await User.update(
+        {
+            avatar:nombreAvatar
+        },
+        {
+          where: {
+            id:userId
+            },
+        });
+}
+
 router.post('/avatar-usuario', saveAvatarUser().single('imgAvatar'), async (req,res)=>{
     res.json({mensaje:"Imagen subida"});
+});
+
+router.get('/avatar-usuario/id', async (req,res)=>{
+    const user = await User.findAll({where:{
+        id:req.query.id
+    }});
+    res.sendFile(`../CTZ/src/assets/images/avatars/${user.avatar}`);
 });
 
 router.delete('/user/:id', async (req,res)=>{

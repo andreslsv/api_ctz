@@ -14,6 +14,7 @@ app.set('port', process.env.PORT || 3000);//Si no tiene puerto habilitado, usar√
 app.set('json spaces', 2);
 
 //Middlewares
+
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:true}));//Solo recibe data sencilla(No im√°genes)
 app.use(express.json());
