@@ -34,6 +34,7 @@ router.get('/pago', async (req,res)=>{
 });
 
 router.post('/pago', async (req,res)=>{
+    
 
     const credito = await Credito.update(
         {

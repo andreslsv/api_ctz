@@ -28,7 +28,7 @@ app.use(cors());
 //Middlewar jwt
 const rutasProtegidas = express.Router(); 
 rutasProtegidas.use((req, res, next) => {
-    const token = req.headers['access-token'];
+    const token = req.headers.authorization.split(' ').slice(-1).pop();
  
     if (token) {
       jwt.verify(token, app.get('llave'), (err, decoded) => {      
@@ -41,7 +41,7 @@ rutasProtegidas.use((req, res, next) => {
       });
     } else {
       res.send({ 
-          mensaje: 'Token no proveída.' 
+          mensaje: 'Token no proveída.'
       });
     }
  });
