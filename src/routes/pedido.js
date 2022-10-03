@@ -66,30 +66,29 @@ router.post('/pedido', async (req,res)=>{
         }
     });
 
-    console.log("Esta es la fecha completa");
 
     if (cierre_vigente.length>0){
         res.status(500).send({ error: 'Dia y hora bloqueados' });
+    }else{
+        const pedidoCreated = await Pedido.create(req.body);
+
+        const credito = {
+            "pedidoId":pedidoCreated.id,
+            "valor":req.body.valor,
+            "abonos":0,
+            "ultimo_pago":"",
+            "fecha_pago":req.body.fecha_pago,
+            "estado":"",
+        }
+    
+        const despacho = {
+            "pedidoId":pedidoCreated.id
+        }
+    
+        const despachoCreated = await Despacho.create(despacho);
+        const creditoCreated = await Credito.create(credito);
+        res.json(pedidoCreated);
     }
-
-    const pedidoCreated = await Pedido.create(req.body);
-
-    const credito = {
-        "pedidoId":pedidoCreated.id,
-        "valor":req.body.valor,
-        "abonos":0,
-        "ultimo_pago":"",
-        "fecha_pago":req.body.fecha_pago,
-        "estado":"",
-    }
-
-    const despacho = {
-        "pedidoId":pedidoCreated.id
-    }
-
-    const despachoCreated = await Despacho.create(despacho);
-    const creditoCreated = await Credito.create(credito);
-    res.json(pedidoCreated);
 });
 
 
