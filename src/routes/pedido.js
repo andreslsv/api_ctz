@@ -69,7 +69,7 @@ router.post('/pedido', async (req,res)=>{
     console.log("Esta es la fecha completa");
 
     if (cierre_vigente.length>0){
-        res.status(500).send({ error: 'Dia y hora bloqueados' })
+        res.status(500).send({ error: 'Dia y hora bloqueados' });
     }
 
     const pedidoCreated = await Pedido.create(req.body);

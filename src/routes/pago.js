@@ -35,21 +35,25 @@ router.get('/pago', async (req,res)=>{
 
 router.post('/pago', async (req,res)=>{
     
-
-    const credito = await Credito.update(
-        {
-            abonos:parseInt(req.body.creditoAbonos)+parseInt(req.body.valor),
-            ultimo_pago:req.body.fecha
-        },
-        {
-          where: {
-            id:req.body.creditoId
+    if(parseInt(req.body.creditoAbonos)+parseInt(req.body.valor)>parseInt(req.body.creditoValor)){
+        res.status(500).send({ error: 'Abono mayor que el crédito' });
+    }else{
+        const credito = await Credito.update(
+            {
+                abonos:parseInt(req.body.creditoAbonos)+parseInt(req.body.valor),
+                estado:parseInt(req.body.creditoAbonos)+parseInt(req.body.valor) <= 0 ? "pagado":"no pagado",
+                ultimo_pago:req.body.fecha
+            },
+            {
+            where: {
+                id:req.body.creditoId
+                }
             }
-        }
-    );
+        );
 
-    const pagoCreated = await Pago.create(req.body);
-    res.json(pagoCreated);
+        const pagoCreated = await Pago.create(req.body);
+        res.json(pagoCreated);
+    }
 });
 
 module.exports=router;

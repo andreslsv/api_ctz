@@ -38,4 +38,15 @@ router.get('/credito', async (req,res)=>{
     res.json(credito); 
 });
 
+router.get('/credito/:id', async (req,res)=>{
+
+    const credito = await Credito.findAll({
+        where:{
+            id:req.params.id
+        }
+    });
+
+    res.json(credito.slice(0, 1).shift()); 
+});
+
 module.exports=router;
