@@ -7,12 +7,13 @@ router.post('/login', async (req,res,next)=>{
 
     try{
         const user = await User.findAll({
-            where:req.body
+        attributes : ['id', 'nick', 'avatar', 'email', 'status'],
+        where:req.body,
         });
     
         if(user.length == 0){
-            res.json({
-                error:`Credenciales incorrectas`
+            return res.status(403).send({
+                message: 'Credenciales incorrectas'
             });
         }else{
             const token = jwt.sign({check:  true}, req.app.get('llave'), {
@@ -22,7 +23,7 @@ router.post('/login', async (req,res,next)=>{
             res.json({
                 mensaje: 'Bienvenido',
                 token: token,
-                user:user
+                user:user.splice(0, 1).shift()
                 });
         }
     }catch(error){
