@@ -17,6 +17,7 @@ app.set('json spaces', 2);
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:true}));//Solo recibe data sencilla(No imágenes)
+app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.json());
 app.set('llave', config.llave);

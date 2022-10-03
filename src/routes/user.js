@@ -103,7 +103,7 @@ router.post('/user', async (req,res)=>{
 saveAvatarUser = () =>{
     const storage = multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null, '../CTZ/src/assets/images/avatars')
+            cb(null, '../CTZ/public/images/avatars')
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();

@@ -4,10 +4,9 @@ var router = express.Router();
 const { User } = require('../db');
 
 router.post('/login', async (req,res,next)=>{
-
     try{
         const user = await User.findAll({
-        attributes : ['id', 'nick', 'avatar', 'email', 'status'],
+        attributes : ['id', 'name', 'nick', 'avatar', 'email', 'status'],
         where:req.body,
         });
     
@@ -29,23 +28,19 @@ router.post('/login', async (req,res,next)=>{
     }catch(error){
         res.send(error);
     }
-
 });
 
-router.get('/authuser', async (req,res)=>{
+router.post('/authuser', async (req,res)=>{
     //const userCreated = await User.create(req.body);
-    var user =
-    {"user":{
-        "name":"Andrés Salas",
-        "nick":"andres",
-        "email":"andres@gmail.com",
-        "avatar":"dsfdsf",
-        "status":"dsfdsf",
-        "password":"1234567"
-    }};
-    res.json(user);
+    var user = await User.findAll({
+        attributes : ['id', 'name', 'nick', 'avatar', 'email', 'status'],
+        where:req.body
+        });
+    res.json(user.splice(0, 1).shift());
 });
 
-
+router.post('/refresh-token', async (req,res)=>{
+    res.json({mensaje:"Voyn a refrescar el token"});
+});
 
 module.exports = router;
