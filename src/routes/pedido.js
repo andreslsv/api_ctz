@@ -78,7 +78,7 @@ router.post('/pedido', async (req,res)=>{
             "abonos":0,
             "ultimo_pago":"",
             "fecha_pago":req.body.fecha_pago,
-            "estado":"",
+            "estado":req.body.estado_pago,
         }
     
         const despacho = {

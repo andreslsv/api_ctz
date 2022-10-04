@@ -40,9 +40,10 @@ router.post('/pago', async (req,res)=>{
     }else{
         const credito = await Credito.update(
             {
+                estado:parseInt(req.body.creditoValor)-(parseInt(req.body.valor)+parseInt(req.body.creditoAbonos))==0?'pagado':req.body.creditoEstado=='en mora'?'en mora':'no pagado',
                 abonos:parseInt(req.body.creditoAbonos)+parseInt(req.body.valor),
-                estado:parseInt(req.body.creditoAbonos)+parseInt(req.body.valor) <= 0 ? "pagado":"no pagado",
-                ultimo_pago:req.body.fecha
+                //estado:parseInt(req.body.creditoAbonos)+parseInt(req.body.valor) <= 0 ? "pagado":"no pagado",
+                ultimo_pago:req.body.fecha,
             },
             {
             where: {

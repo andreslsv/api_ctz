@@ -22,7 +22,9 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.set('llave', config.llave);
 
-app.use(cors());
+const whiteList = ["http://localhost:4200", "https://admin.trituradoselzulia.com"];
+
+app.use(cors({origin: '*'}));
 
 
 //Middlewar jwt

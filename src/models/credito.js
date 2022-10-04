@@ -10,6 +10,6 @@ module.exports = (sequelize, type)=>{
         abonos:type.STRING,
         ultimo_pago:type.STRING,
         fecha_pago:type.STRING,
-        estado:type.INTEGER
+        estado:type.STRING
     })
 }

@@ -103,7 +103,7 @@ router.post('/user', async (req,res)=>{
 saveAvatarUser = () =>{
     const storage = multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null, '../CTZ/public/images/avatars')
+            cb(null, '/public/images/avatars')
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();
@@ -136,7 +136,7 @@ router.get('/avatar-usuario/id', async (req,res)=>{
     const user = await User.findAll({where:{
         id:req.query.id
     }});
-    res.sendFile(`../CTZ/src/assets/images/avatars/${user.avatar}`);
+    res.sendFile(`/src/assets/images/avatars/${user.avatar}`);
 });
 
 router.delete('/user/:id', async (req,res)=>{
