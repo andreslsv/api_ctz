@@ -152,4 +152,33 @@ router.get('/extras-descargas', async (req,res)=>{
 
 });
 
+
+router.get('/extras-contadores', async (req,res)=>{
+    const pedidos = await Pedido.findAll({
+        where:{
+            aprobado:req.query.aprobado,
+            fecha_despacho:{[Op.between]: [req.query.fechaInicio, req.query.fechaFin]}
+        }
+    });
+
+    var total=pedidos.length;
+    var m3Pedidos=0;
+    var porDespachar=0;
+    var despachados=0;
+
+    pedidos.map((data)=>{
+        m3Pedidos = parseInt(m3Pedidos) + parseInt(data.m3);
+        if(data.estado=='programado') {
+            porDespachar++;
+        }
+        if(data.estado=='despachado'){
+            despachados++
+        }
+    });
+
+    var valores={total:total,m3Pedidos:m3Pedidos,porDespachar:porDespachar,despachados:despachados}
+
+    res.json(valores);
+});
+
 module.exports=router;
