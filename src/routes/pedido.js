@@ -39,6 +39,19 @@ router.get('/pedido', async (req,res)=>{
     res.json(pedido); 
 });
 
+
+router.get(`/pedido/:id`, async (req,res)=>{
+
+    const pedido = await Pedido.findOne({
+        include:[{model:Cliente, as:"client"},Vendedor,Conductor,Concreto,Credito],
+        where:{
+            id:req.params.id
+        }
+    });
+
+    res.json(pedido); 
+});
+
 router.post('/pedido', async (req,res)=>{
 
     const fecha_despacho = moment(req.body.fecha_despacho,'YYYY-MM-DD').format('DD-MM-YYYY');
@@ -93,15 +106,64 @@ router.post('/pedido', async (req,res)=>{
 
 
 router.post('/pedido/:id', async (req,res)=>{
-    const pedidoActualizado = await Pedido.update(
-        req.body,
-        {
-          where: {
-            id:req.params.id
-            },
+
+    const fecha_despacho = moment(req.body.fecha_despacho,'YYYY-MM-DD').format('DD-MM-YYYY');
+    const hora_inicio = moment(req.body.hora_cargue,"HH:mm").format("HH:mm");
+
+    const cierre_vigente = await Cierre.findAll({
+        where:{
+            [Op.and]: [
+                {fecha:{
+                    [Op.eq]:req.body.fecha_despacho
+                    }},
+                {
+                    hora_inicio:{
+                        [Op.lte]:hora_inicio
+                    }
+                },
+                {
+                    hora_fin:{
+                        [Op.gte]:hora_inicio
+                    }
+                },
+            ]
         }
-      );
-    res.json(pedidoActualizado);
+    });
+
+    if (cierre_vigente.length>0){
+        res.status(500).send({ error: 'Dia y hora bloqueados' });
+    }else{
+        const pedidoActualizado = await Pedido.update(
+            req.body,
+            {
+              where: {
+                id:req.params.id
+                }
+            }
+          );
+
+        const credito = {
+            "valor":req.body.valor,
+            "abonos":0,
+            "ultimo_pago":"",
+            "fecha_pago":req.body.fecha_pago,
+            "estado":"no pagado",
+        }
+
+        const creditoUpdated = await Credito.update(
+            credito,
+            {
+              where: {
+                pedidoId:req.params.id
+                }
+            }
+          );
+    
+        //const creditoCreated = await Credito.create(credito);
+        res.json(pedidoActualizado);
+    }
+
+    //res.json(pedidoActualizado);
 });
 
 router.delete('/pedido/:id', async (req,res)=>{

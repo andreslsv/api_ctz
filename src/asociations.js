@@ -34,6 +34,9 @@ Pedido.belongsTo(Vendedor);
 Conductor.hasMany(Pedido);
 Pedido.belongsTo(Conductor);
 
+Cliente.hasMany(Pedido);
+Pedido.belongsTo(Cliente,{as:"client"});
+
 User.hasMany(Cierre);
 Cierre.belongsTo(User);
 
