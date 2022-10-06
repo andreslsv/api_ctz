@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
 const { Op, where } = require("sequelize");
 const multer = require('multer');
+const moment = require('moment');
 
 
 genRandonString = (length)=>{
@@ -13,7 +14,6 @@ genRandonString = (length)=>{
     }
     return result;
  }
-
 
 router.get('/user', async (req,res)=>{
     var whereStatement = {};
@@ -68,7 +68,7 @@ router.post('/user', async (req,res)=>{
         "role":req.body.role,
         "email":req.body.email,
         "password":req.body.password_1,
-        "status":2,
+        "status":"creado",
     };
 
     const userCreated = await User.create(usuario);
@@ -78,7 +78,7 @@ router.post('/user', async (req,res)=>{
         "nombre":`${req.body.nombres} ${req.body.apellidos}`,
         "tipo_documento":req.body.tipo_documento,
         "documento":req.body.documento,
-        "fecha":req.body.documento,
+        "fecha": moment(req.body.fecha,'YYYY-MM-DD').format('YYYY-MM-DD'),
         "direccion":req.body.direccion,
         "telefono":req.body.telefono,
     }
@@ -98,6 +98,83 @@ router.post('/user', async (req,res)=>{
     }
 
     res.json(userCreated);
+});
+
+router.post('/user/:id', async (req,res)=>{
+
+    const usuario = {
+        "name":`${req.body.nombres} ${req.body.apellidos}`,
+        "nick":req.body.nickname,
+        "role":req.body.role,
+        "email":req.body.email,
+        "password":req.body.password_1,
+        "status":"creado",
+    };
+
+    const userEditado = await User.update(
+        usuario,
+        {
+          where: {
+            id:req.params.id
+            }
+        }
+      );
+
+    //const userCreated = await User.create(usuario);
+
+    var estructura = {
+        "nombre":`${req.body.nombres} ${req.body.apellidos}`,
+        "tipo_documento":req.body.tipo_documento,
+        "documento":req.body.documento,
+        "fecha": moment(req.body.fecha,'YYYY-MM-DD').format('YYYY-MM-DD'),
+        "direccion":req.body.direccion,
+        "telefono":req.body.telefono,
+    }
+
+    if(req.body.role=="vendedor"){
+        //const vendedorCreated = await Vendedor.create(estructura);
+
+        const vendedorCreated = await Vendedor.update(
+            estructura,
+            {
+              where: {
+                userId:req.params.id
+                }
+            }
+        );
+    }
+
+    if(req.body.role=="conductor"){
+        estructura.placa = req.body.placa;
+
+        const conductorCreated = await Conductor.update(
+            estructura,
+            {
+              where: {
+                userId:req.params.id
+                }
+            }
+        );
+
+        //const conductorCreated = await Conductor.create(estructura);
+    }
+
+    if(req.body.role=="cliente"){
+        estructura.color = req.body.color;
+
+        const clienteCreated = await Cliente.update(
+            estructura,
+            {
+              where: {
+                userId:req.params.id
+                }
+            }
+        );
+
+        //const clienteCreated = await Cliente.create(estructura);
+    }
+
+    res.json(userEditado);
 });
 
 saveAvatarUser = () =>{
@@ -149,10 +226,36 @@ router.delete('/user/:id', async (req,res)=>{
 });
 
 router.get('/user/:id', async (req,res)=>{
-    const user = await User.findAll({
+
+    /*
+    var includes=[];
+
+    if(req.query.tipo=="vendedores"){
+        includes[0]={
+            model:Vendedor,
+            as:'vendedor'
+        }
+    }
+
+    if(tipo=="conductores"){
+        includes[0]={
+            model:Conductor,
+            as:'conductor'
+        }
+    }
+
+    if(tipo=="clientes"){
+        includes[0]={
+            model:Cliente,
+            as:'cliente'
+        }
+    }*/
+
+    const user = await User.findOne({
         where: {
             id:req.params.id
-        }
+        },
+        include :[Vendedor,Cliente,Conductor]
     });
     res.json(user);
 });

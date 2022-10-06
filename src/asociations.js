@@ -13,7 +13,7 @@ User.hasOne(Vendedor);
 Vendedor.belongsTo(User);
 
 User.hasOne(Cliente);
-Vendedor.belongsTo(User);
+Cliente.belongsTo(User);
 
 Pedido.hasOne(Credito);
 Credito.belongsTo(Pedido);

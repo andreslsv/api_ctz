@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Vendedor } = require('../db');
+const { Vendedor, User } = require('../db');
 
 router.get('/vendedor', async (req,res)=>{
 
     var mainStatement = {};
     var whereStatement = {};
     mainStatement.where = whereStatement;
+    mainStatement.include = [User];
 
     if(req.query.limit){
         mainStatement.limit = parseInt(req.query.limit);

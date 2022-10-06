@@ -26,8 +26,32 @@ router.get('/concreto', async (req,res)=>{
     res.json(concreto); 
 });
 
+
+router.get('/concreto/:id', async (req,res)=>{
+
+    const concreto = await Concreto.findAll({
+        where:{
+            id:req.params.id
+        }
+    });
+    res.json(concreto.slice(0, 1).shift());
+});
+
 router.post('/concreto', async (req,res)=>{
     const concretoCreated = await Concreto.create(req.body);
+    res.json(concretoCreated);
+});
+
+router.post('/concreto/:id', async (req,res)=>{
+    //const concretoCreated = await Concreto.create(req.body);
+    const concretoCreated = await Concreto.update(
+        req.body,
+        {
+          where: {
+            id:req.params.id
+            }
+        }
+      );
     res.json(concretoCreated);
 });
 
