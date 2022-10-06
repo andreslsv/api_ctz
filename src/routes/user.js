@@ -180,7 +180,7 @@ router.post('/user/:id', async (req,res)=>{
 saveAvatarUser = () =>{
     const storage = multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null, '/public/images/avatars')
+            cb(null, './public/images/avatars')
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();
