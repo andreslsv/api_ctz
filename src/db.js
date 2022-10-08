@@ -19,7 +19,7 @@ const sequelize = new Sequelize('triturados', 'root', '',{
     host:'localhost',
     dialect:'mysql'
 });
-
+ 
 const User = userModule(sequelize, Sequelize);
 const Pedido = pedidoModule(sequelize, Sequelize);
 const Cliente = clienteModule(sequelize, Sequelize);

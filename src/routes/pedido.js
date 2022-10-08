@@ -10,6 +10,8 @@ router.get('/pedido', async (req,res)=>{
     var whereStatement = {};
     mainStatement.where = whereStatement;
 
+    mainStatement.include=[{model:Cliente}];
+
     if(req.query.limit){
         mainStatement.limit = parseInt(req.query.limit);
     }
@@ -27,7 +29,7 @@ router.get('/pedido', async (req,res)=>{
     }
 
     if(req.query.search_nombre_cliente){
-        whereStatement.cliente = {[Op.like]: '%' + req.query.search_nombre_cliente + '%'};
+        whereStatement.nombre_cliente = {[Op.like]: '%' + req.query.search_nombre_cliente + '%'};
     }
 
     if(req.query.aprobado){
@@ -43,7 +45,7 @@ router.get('/pedido', async (req,res)=>{
 router.get(`/pedido/:id`, async (req,res)=>{
 
     const pedido = await Pedido.findOne({
-        include:[{model:Cliente, as:"client"},Vendedor,Conductor,Concreto,Credito],
+        include:[{model:Cliente},Vendedor,Conductor,Concreto,Credito],
         where:{
             id:req.params.id
         }

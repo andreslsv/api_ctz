@@ -5,7 +5,7 @@ module.exports = (sequelize, type)=>{
             primaryKey:true,
             autoIncrement:true,
         },
-        cliente:type.STRING,
+        nombre_cliente:type.STRING,
         fecha_despacho:type.STRING,
         hora_cargue:type.STRING,
         hora_obra:type.STRING,
