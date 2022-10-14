@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente, Cierre, Despacho, User } = require('../db');
+const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente, Cierre, Despacho, User, Perfil } = require('../db');
 const moment = require('moment');
 
 router.get('/pedido', async (req,res)=>{
@@ -45,7 +45,7 @@ router.get('/pedido', async (req,res)=>{
         whereStatement.aprobado = req.query.aprobado;
     }
 
-    mainStatement.include=[modelCliente,{model:Concreto},{model:Conductor},{model:Vendedor}];
+    mainStatement.include=[modelCliente,{model:Concreto},{model:Conductor},{model:Vendedor},{model:Perfil,as:'cliente2'}];
     
     const pedido = await Pedido.findAndCountAll(mainStatement);
 

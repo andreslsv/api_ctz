@@ -84,6 +84,7 @@ router.post('/user', async (req,res)=>{
         "fecha": moment(req.body.fecha,'YYYY-MM-DD').format('YYYY-MM-DD'),
         "direccion":req.body.direccion,
         "telefono":req.body.telefono,
+        "email":req.body.email,
     }
 
     if(req.body.role=="vendedor"){
@@ -99,6 +100,10 @@ router.post('/user', async (req,res)=>{
         estructura.color = req.body.color;
         const clienteCreated = await Cliente.create(estructura);
     }
+
+    estructura.placa = req.body.placa;
+    estructura.color = req.body.color;
+    const perfilCreated = await Perfil.create(estructura);
 
     res.json(userCreated);
 });
