@@ -7,6 +7,7 @@ module.exports = (sequelize, type)=>{
         },
         color:type.STRING,//Diferencial
         nombre:type.STRING,
+        apellido:type.STRING,
         tipo_documento:type.STRING,
         documento:type.STRING,
         fecha:type.STRING,

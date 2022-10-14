@@ -6,8 +6,8 @@ const { User } = require('../db');
 router.post('/login', async (req,res,next)=>{
     try{
         const user = await User.findAll({
-        attributes : ['id', 'name', 'nick', 'avatar', 'email', 'status'],
-        where:req.body,
+        attributes : ['id','role','name','nick','avatar','email','status'],
+        where:req.body
         });
     
         if(user.length == 0){

@@ -3,6 +3,7 @@ const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
 const { Op, where } = require("sequelize");
 const multer = require('multer');
 const moment = require('moment');
+const fs = require('fs');
 
 
 genRandonString = (length)=>{
@@ -53,7 +54,8 @@ router.post('/authuser', async (req,res)=>{
             name:decodedToken.name,
             avatar:decodedToken.avatar,
             email:decodedToken.email,
-            status:decodedToken.status
+            status:decodedToken.status,
+            role:decodedToken.role
          }
          res.json(user);
         }
@@ -75,7 +77,8 @@ router.post('/user', async (req,res)=>{
 
     var estructura = {
         "userId":userCreated.id,
-        "nombre":`${req.body.nombres} ${req.body.apellidos}`,
+        "nombre":`${req.body.nombres}`,
+        "apellido":`${req.body.apellidos}`,
         "tipo_documento":req.body.tipo_documento,
         "documento":req.body.documento,
         "fecha": moment(req.body.fecha,'YYYY-MM-DD').format('YYYY-MM-DD'),
@@ -118,12 +121,15 @@ router.post('/user/:id', async (req,res)=>{
             id:req.params.id
             }
         }
-      );
+    );
+
+    const userAEditar = await User.findOne({where:{id:req.params.id}});
 
     //const userCreated = await User.create(usuario);
 
     var estructura = {
-        "nombre":`${req.body.nombres} ${req.body.apellidos}`,
+        "nombre":req.body.nombres,
+        "apellido":req.body.apellidos,
         "tipo_documento":req.body.tipo_documento,
         "documento":req.body.documento,
         "fecha": moment(req.body.fecha,'YYYY-MM-DD').format('YYYY-MM-DD'),
@@ -174,13 +180,24 @@ router.post('/user/:id', async (req,res)=>{
         //const clienteCreated = await Cliente.create(estructura);
     }
 
-    res.json(userEditado);
+    res.json(userAEditar);
 });
 
 saveAvatarUser = () =>{
     const storage = multer.diskStorage({
         destination:(req,file,cb)=>{
-            cb(null, './public/images/avatars')
+            const ruta = './public/images/avatars';
+
+            const path = `${ruta}/${req.body.userAvatar}`;
+
+            fs.unlink(path, (err) => {
+                if (err) {
+                    console.error('No existe el archivo',err)
+                    //return
+                }
+            })
+
+            cb(null, ruta)
         },
         filename:(req,file,cb)=>{
             const ext = file.originalname.split('.').pop();
@@ -217,6 +234,17 @@ router.get('/avatar-usuario/id', async (req,res)=>{
 });
 
 router.delete('/user/:id', async (req,res)=>{
+
+    const seleccionarUsuario = await User.findOne({where:{id:req.params.id}});
+    const ruta = `./public/images/avatars/${seleccionarUsuario.avatar}`;
+
+    fs.unlink(ruta, (err) => {
+        if (err) {
+            console.error('No existe el archivo',err)
+            //return
+        }
+    })
+
     const userDeleted = await User.destroy({
         where: {
             id:req.params.id

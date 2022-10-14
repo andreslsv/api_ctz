@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente, Cierre, Despacho } = require('../db');
+const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente, Cierre, Despacho, User } = require('../db');
 const moment = require('moment');
 
 router.get('/pedido', async (req,res)=>{
@@ -10,7 +10,9 @@ router.get('/pedido', async (req,res)=>{
     var whereStatement = {};
     mainStatement.where = whereStatement;
 
-    mainStatement.include=[{model:Cliente}];
+    var modelCliente = {
+        model:Cliente
+    }
 
     if(req.query.limit){
         mainStatement.limit = parseInt(req.query.limit);
@@ -28,13 +30,22 @@ router.get('/pedido', async (req,res)=>{
         whereStatement.fecha_despacho = {[Op.between]: [req.query.fechaInicio, req.query.fechaFin]};
     }
 
-    if(req.query.search_nombre_cliente){
+    /*if(req.query.search_nombre_cliente){
         whereStatement.nombre_cliente = {[Op.like]: '%' + req.query.search_nombre_cliente + '%'};
+    }*/
+
+    if(req.query.search_nombre_cliente){
+        modelCliente.where = {[Op.or]:[
+            {nombre:{[Op.like]: '%' + req.query.search_nombre_cliente + '%'}},
+            {apellido:{[Op.like]: '%' + req.query.search_nombre_cliente + '%'}}
+        ]};
     }
 
     if(req.query.aprobado){
         whereStatement.aprobado = req.query.aprobado;
     }
+
+    mainStatement.include=[modelCliente,{model:Concreto},{model:Conductor},{model:Vendedor}];
     
     const pedido = await Pedido.findAndCountAll(mainStatement);
 

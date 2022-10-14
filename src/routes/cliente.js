@@ -37,11 +37,14 @@ router.post('/cliente', async (req,res)=>{
 });
 
 router.delete('/cliente/:id', async (req,res)=>{
+
     const clienteDeleted = await Cliente.destroy({
         where: {
-            id:req.params.id
+            userId:req.params.id
         }
     });
+
+
     res.json(clienteDeleted);
 });
 

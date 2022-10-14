@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Credito, Pedido, Pago } = require('../db');
+const { Credito, Pedido, Pago, Cliente } = require('../db');
 
 router.get('/credito', async (req,res)=>{
 
@@ -9,7 +9,7 @@ router.get('/credito', async (req,res)=>{
     var whereStatement = {};
     mainStatement.where = whereStatement;
 
-    const include = [Pedido, Pago];
+    const include = [{model:Pedido,include:[Cliente]}, Pago];
     mainStatement.include = include;
 
 

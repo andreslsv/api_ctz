@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Conductor, User } = require('../db');
+const { Conductor, User , Vendedor } = require('../db');
 
 router.get('/conductor', async (req,res)=>{
 
@@ -42,11 +42,15 @@ router.post('/conductor', async (req,res)=>{
 });
 
 router.delete('/conductor/:id', async (req,res)=>{
+
+
     const conductorDeleted = await Conductor.destroy({
         where: {
-            id:req.params.id
+            userId:req.params.id
         }
     });
+
+
     res.json(conductorDeleted);
 });
 
