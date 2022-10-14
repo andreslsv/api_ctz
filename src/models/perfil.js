@@ -5,6 +5,7 @@ module.exports = (sequelize, type)=>{
             primaryKey:true,
             autoIncrement:true,
         },
+        role:type.STRING,
         nombre:type.STRING,
         apellido:type.STRING,
         tipo_documento:type.STRING,
@@ -16,5 +17,8 @@ module.exports = (sequelize, type)=>{
         fecha:type.STRING,
         estado:type.STRING,
         color:type.STRING
+    },
+    {
+        tableName: 'perfiles'
     })
 }

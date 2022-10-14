@@ -1,15 +1,15 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Credito, Pedido, Pago, Cliente, Perfil } = require('../db');
+const { Perfil, Pedido, Pago, Cliente, User } = require('../db');
 
-router.get('/credito', async (req,res)=>{
+router.get('/perfil', async (req,res)=>{
 
     var mainStatement = {};
     var whereStatement = {};
     mainStatement.where = whereStatement;
 
-    const include = [{model:Pedido,include:[Cliente,{model:Perfil,as:"cliente2"}]}, Pago];
+    const include = [User];
     mainStatement.include = include;
 
 
@@ -25,6 +25,10 @@ router.get('/credito', async (req,res)=>{
         mainStatement.order = [['id', 'DESC']];
     }
 
+    if(req.query.role){
+        whereStatement.role = req.query.role;
+    }
+
     if(req.query.search_nombre){
         whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
     }
@@ -33,20 +37,20 @@ router.get('/credito', async (req,res)=>{
         whereStatement.id = req.query.id;
     }
 
-    const credito = await Credito.findAndCountAll(mainStatement);
+    const perfil = await Perfil.findAndCountAll(mainStatement);
 
-    res.json(credito); 
+    res.json(perfil); 
 });
 
-router.get('/credito/:id', async (req,res)=>{
+router.get('/perfil/:id', async (req,res)=>{
 
-    const credito = await Credito.findAll({
+    const perfil = await Perfil.findAndCountAll({
         where:{
             id:req.params.id
         }
     });
 
-    res.json(credito.slice(0, 1).shift()); 
+    res.json(perfil.slice(0, 1).shift()); 
 });
 
 module.exports=router;

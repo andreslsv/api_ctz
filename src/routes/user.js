@@ -19,6 +19,7 @@ genRandonString = (length)=>{
 router.get('/user', async (req,res)=>{
     var whereStatement = {};
 
+
     if(req.query.search_nombre){
         whereStatement.name = {[Op.like]: '%' + req.query.search_nombre + '%'};
     }
@@ -35,6 +36,7 @@ router.get('/user', async (req,res)=>{
 
     const user = await User.findAndCountAll(
         {
+        include:[Perfil],
         where:whereStatement,
         limit:parseInt(req.query.limit),
         offset:parseInt(req.query.offset)
@@ -101,6 +103,7 @@ router.post('/user', async (req,res)=>{
         const clienteCreated = await Cliente.create(estructura);
     }
 
+    estructura.role = req.body.role;
     estructura.placa = req.body.placa;
     estructura.color = req.body.color;
     const perfilCreated = await Perfil.create(estructura);
@@ -184,6 +187,22 @@ router.post('/user/:id', async (req,res)=>{
 
         //const clienteCreated = await Cliente.create(estructura);
     }
+
+    
+        estructura.color = req.body.color;
+        estructura.placa = req.body.placa;
+
+        const clienteCreated = await Perfil.update(
+            estructura,
+            {
+              where: {
+                userId:req.params.id
+                }
+            }
+        );
+
+        //const clienteCreated = await Cliente.create(estructura);
+    
 
     res.json(userAEditar);
 });
@@ -288,7 +307,7 @@ router.get('/user/:id', async (req,res)=>{
         where: {
             id:req.params.id
         },
-        include :[Vendedor,Cliente,Conductor]
+        include :[Vendedor,Cliente,Conductor,Perfil]
     });
     res.json(user);
 });
