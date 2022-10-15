@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Perfil, Pedido, Pago, Cliente, User } = require('../db');
+const { Perfil, Pedido, Pago, User } = require('../db');
 
 router.get('/perfil', async (req,res)=>{
 

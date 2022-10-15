@@ -61,7 +61,7 @@ app.use('/api/',rutasProtegidas,require('./routes/concreto.js',concreto));
 
 var pedido = require('./routes/pedido.js');
 app.use('/api/',rutasProtegidas,require('./routes/pedido.js',pedido));
-
+/*
 var cliente = require('./routes/cliente.js');
 app.use('/api/',rutasProtegidas,require('./routes/cliente.js',cliente));
 
@@ -70,7 +70,7 @@ app.use('/api/',rutasProtegidas,require('./routes/conductor.js',conductor));
 
 var vendedor = require('./routes/vendedor.js');
 app.use('/api/',rutasProtegidas,require('./routes/vendedor.js',vendedor));
-
+*/
 var pago = require('./routes/pago.js');
 app.use('/api/',rutasProtegidas,require('./routes/pago.js',pago));
 

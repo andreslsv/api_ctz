@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Pedido, Credito, Concreto, Vendedor, Conductor, Cliente, Cierre, Despacho, User, Perfil } = require('../db');
+const { Pedido, Credito, Concreto, Cierre, Despacho, User, Perfil } = require('../db');
 const moment = require('moment');
 
 router.get('/pedido', async (req,res)=>{
@@ -11,7 +11,7 @@ router.get('/pedido', async (req,res)=>{
     mainStatement.where = whereStatement;
 
     var modelCliente = {
-        model:Cliente
+        model:Perfil,as:"cliente2"
     }
 
     if(req.query.limit){
@@ -45,7 +45,7 @@ router.get('/pedido', async (req,res)=>{
         whereStatement.aprobado = req.query.aprobado;
     }
 
-    mainStatement.include=[modelCliente,{model:Concreto},{model:Conductor},{model:Vendedor},{model:Perfil,as:'cliente2'},{model:Perfil,as:'conductor2'}];
+    mainStatement.include=[modelCliente,{model:Concreto},{model:Perfil,as:'cliente2'},{model:Perfil,as:'conductor2'},{model:Perfil,as:'vendedor2'}];
     
     const pedido = await Pedido.findAndCountAll(mainStatement);
 
@@ -56,7 +56,7 @@ router.get('/pedido', async (req,res)=>{
 router.get(`/pedido/:id`, async (req,res)=>{
 
     const pedido = await Pedido.findOne({
-        include:[{model:Cliente},Vendedor,Conductor,Concreto,Credito],
+        include:[/*{model:Cliente}*/Concreto,Credito],
         where:{
             id:req.params.id
         }

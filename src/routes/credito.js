@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Credito, Pedido, Pago, Cliente, Perfil } = require('../db');
+const { Credito, Pedido, Pago, Perfil } = require('../db');
 
 router.get('/credito', async (req,res)=>{
 
@@ -9,9 +9,12 @@ router.get('/credito', async (req,res)=>{
     var whereStatement = {};
     mainStatement.where = whereStatement;
 
-    const include = [{model:Pedido,include:[Cliente,{model:Perfil,as:"cliente2"}]}, Pago];
-    mainStatement.include = include;
+    includePedido = {
+        model:Pedido,
+        include:[{model:Perfil,as:"cliente2"}],
+    };
 
+    includePedidoWhere = {};
 
     if(req.query.limit){
         mainStatement.limit = parseInt(req.query.limit);
@@ -25,6 +28,14 @@ router.get('/credito', async (req,res)=>{
         mainStatement.order = [['id', 'DESC']];
     }
 
+    if(req.query.aprobado){
+        includePedidoWhere.aprobado = req.query.aprobado;
+    }
+
+    if(req.query.fechaInicio && req.query.fechaFin){
+        includePedidoWhere.fecha_despacho = {[Op.between]: [req.query.fechaInicio, req.query.fechaFin]};
+    }
+
     if(req.query.search_nombre){
         whereStatement.nombre = {[Op.like]: '%' + req.query.search_nombre + '%'};
     }
@@ -32,6 +43,12 @@ router.get('/credito', async (req,res)=>{
     if(req.query.id){
         whereStatement.id = req.query.id;
     }
+
+    includePedido.where = includePedidoWhere;
+
+    const include = [includePedido, Pago];
+
+    mainStatement.include = include;
 
     const credito = await Credito.findAndCountAll(mainStatement);
 

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Conductor, User , Vendedor } = require('../db');
+const { Conductor, User } = require('../db');
 
 router.get('/conductor', async (req,res)=>{
 

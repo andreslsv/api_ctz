@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Perfil, Cliente, Conductor, Vendedor } = require('../db');
+const { User, Perfil } = require('../db');
 const { Op, where } = require("sequelize");
 const multer = require('multer');
 const moment = require('moment');
@@ -89,19 +89,6 @@ router.post('/user', async (req,res)=>{
         "email":req.body.email,
     }
 
-    if(req.body.role=="vendedor"){
-        const vendedorCreated = await Vendedor.create(estructura);
-    }
-
-    if(req.body.role=="conductor"){
-        estructura.placa = req.body.placa;
-        const conductorCreated = await Conductor.create(estructura);
-    }
-
-    if(req.body.role=="cliente"){
-        estructura.color = req.body.color;
-        const clienteCreated = await Cliente.create(estructura);
-    }
 
     estructura.role = req.body.role;
     estructura.placa = req.body.placa;
@@ -133,8 +120,6 @@ router.post('/user/:id', async (req,res)=>{
 
     const userAEditar = await User.findOne({where:{id:req.params.id}});
 
-    //const userCreated = await User.create(usuario);
-
     var estructura = {
         "nombre":req.body.nombres,
         "apellido":req.body.apellidos,
@@ -145,50 +130,6 @@ router.post('/user/:id', async (req,res)=>{
         "telefono":req.body.telefono,
     }
 
-    if(req.body.role=="vendedor"){
-        //const vendedorCreated = await Vendedor.create(estructura);
-
-        const vendedorCreated = await Vendedor.update(
-            estructura,
-            {
-              where: {
-                userId:req.params.id
-                }
-            }
-        );
-    }
-
-    if(req.body.role=="conductor"){
-        estructura.placa = req.body.placa;
-
-        const conductorCreated = await Conductor.update(
-            estructura,
-            {
-              where: {
-                userId:req.params.id
-                }
-            }
-        );
-
-        //const conductorCreated = await Conductor.create(estructura);
-    }
-
-    if(req.body.role=="cliente"){
-        estructura.color = req.body.color;
-
-        const clienteCreated = await Cliente.update(
-            estructura,
-            {
-              where: {
-                userId:req.params.id
-                }
-            }
-        );
-
-        //const clienteCreated = await Cliente.create(estructura);
-    }
-
-    
         estructura.color = req.body.color;
         estructura.placa = req.body.placa;
 
@@ -200,9 +141,6 @@ router.post('/user/:id', async (req,res)=>{
                 }
             }
         );
-
-        //const clienteCreated = await Cliente.create(estructura);
-    
 
     res.json(userAEditar);
 });
@@ -307,7 +245,7 @@ router.get('/user/:id', async (req,res)=>{
         where: {
             id:req.params.id
         },
-        include :[Vendedor,Cliente,Conductor,Perfil]
+        include :[Perfil]
     });
     res.json(user);
 });

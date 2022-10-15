@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { where } = require('sequelize');
 const { Op } = require("sequelize");
-const { Concreto, Pedido, Credito } = require('../db');
+const { Concreto, Pedido, Credito, Perfil } = require('../db');
 
 router.get('/extras-despachos', async (req,res)=>{
     
@@ -69,23 +69,26 @@ router.get('/extras-pagados', async (req,res)=>{
         }]
     });
 
-    res.json([{
+    res.json([
+    {
+        "name":"En mora",
+        "value":enMora.length
+    },
+    {
         "name":"Pagados",
         "value":pagados.length
     },
     {
         "name":"No pagados",
         "value":noPagados.length
-    },
-    {
-        "name":"En mora",
-        "value":enMora.length
-    }]); 
+    }
+    ]); 
 });
 
 
 router.get('/extras-conductores', async (req,res)=>{
     const pedidoConductores = await Pedido.findAll({
+        include:[{model:Perfil,as:"conductor2"}],
         where:{
             fecha_despacho:{[Op.between]: [req.query.fechaInicio, req.query.fechaFin]}
         }
@@ -99,7 +102,7 @@ router.get('/extras-conductores', async (req,res)=>{
 
         _conductores_detectados.map((data_conductor)=>{
 
-            if(data_pedido.nombre_conductor == data_conductor.name){
+            if(data_pedido.conductor2.nombre == data_conductor.name){
                 data_conductor.value = parseInt(data_conductor.value) + parseInt(data_pedido.m3);
                 conductor_existe = true;
             }
@@ -107,7 +110,7 @@ router.get('/extras-conductores', async (req,res)=>{
 
         if(conductor_existe == false){
             _conductores_detectados.push({
-                "name":data_pedido.nombre_conductor,
+                "name":data_pedido.conductor2.nombre,
                 "value":parseInt(data_pedido.m3)
             });
         }
