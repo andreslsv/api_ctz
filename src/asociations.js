@@ -22,11 +22,13 @@ Cliente.belongsTo(User, { onDelete: 'cascade' });
 User.hasOne(Perfil, { onDelete: 'cascade' });
 Perfil.belongsTo(User, { onDelete: 'cascade' });
 
+/*
 User.hasOne(Perfil, { onDelete: 'cascade' });
 Perfil.belongsTo(User, { onDelete: 'cascade' });
 
 User.hasOne(Perfil, { onDelete: 'cascade' });
 Perfil.belongsTo(User, { onDelete: 'cascade' });
+*/
 
 //Duplicados
 

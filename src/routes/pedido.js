@@ -45,7 +45,7 @@ router.get('/pedido', async (req,res)=>{
         whereStatement.aprobado = req.query.aprobado;
     }
 
-    mainStatement.include=[modelCliente,{model:Concreto},{model:Conductor},{model:Vendedor},{model:Perfil,as:'cliente2'}];
+    mainStatement.include=[modelCliente,{model:Concreto},{model:Conductor},{model:Vendedor},{model:Perfil,as:'cliente2'},{model:Perfil,as:'conductor2'}];
     
     const pedido = await Pedido.findAndCountAll(mainStatement);
 
