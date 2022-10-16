@@ -89,6 +89,9 @@ app.use('/api/',rutasProtegidas,require('./routes/extras.js',extras));
 var perfil = require('./routes/perfil.js');
 app.use('/api/',rutasProtegidas,require('./routes/perfil.js',perfil));
 
+/*var role = require('./routes/role.js');
+app.use('/api/',rutasProtegidas,require('./routes/role.js',role));*/
+
 
 //Arrancando el servidor en el puerto 3000
 app.listen(app.get('port'),()=>{

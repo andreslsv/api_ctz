@@ -12,6 +12,7 @@ const pagoModule = require('./models/pago.js');
 const bancoModule = require('./models/banco.js');
 const perfilModule = require('./models/perfil.js');
 const despachoModule = require('./models/despacho.js');
+const roleModule = require('./models/role.js');
 
 //'ctz_triturados', 'ctz_programador', 'mesQa&Y~9BHS'
 //'triturados','root',''
@@ -21,6 +22,7 @@ const sequelize = new Sequelize('triturados','root','',{
     dialect:'mysql'
 });
  
+const Role = roleModule(sequelize, Sequelize);
 const User = userModule(sequelize, Sequelize);
 const Pedido = pedidoModule(sequelize, Sequelize);
 //const Cliente = clienteModule(sequelize, Sequelize);
@@ -38,4 +40,4 @@ sequelize.sync({force:false}).then(()=>{
     console.log("Conexión sql exitosa");
 });
 
-module.exports = {User, Pedido, Concreto, Cierre, Credito, Pago, Banco, Perfil, Despacho};
+module.exports = {User, Pedido, Concreto, Cierre, Credito, Pago, Banco, Perfil, Despacho, Role};
