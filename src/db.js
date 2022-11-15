@@ -24,6 +24,8 @@ const sequelize = new Sequelize('triturados','root','',{
  
 const Role = roleModule(sequelize, Sequelize);
 const User = userModule(sequelize, Sequelize);
+const Perfil = perfilModule(sequelize, Sequelize);
+
 const Pedido = pedidoModule(sequelize, Sequelize);
 //const Cliente = clienteModule(sequelize, Sequelize);
 const Concreto = concretoModule(sequelize, Sequelize);
@@ -33,7 +35,6 @@ const Cierre = cierreModule(sequelize, Sequelize);
 const Credito = creditoModule(sequelize, Sequelize);
 const Pago = pagoModule(sequelize, Sequelize);
 const Banco = bancoModule(sequelize, Sequelize);
-const Perfil = perfilModule(sequelize, Sequelize);
 const Despacho = despachoModule(sequelize, Sequelize);
 
 sequelize.sync({force:false}).then(()=>{

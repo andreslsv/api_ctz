@@ -22,10 +22,6 @@ crearUsuario=async()=>{
                 estado:"creado",
                 role2Id:1
             }
-        },
-        {include:[
-            { model: Perfil}
-        ]
         }
         );
     } catch (error) {
